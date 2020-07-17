@@ -259,8 +259,8 @@
     <property name="title">
      <string>Setting</string>
     </property>
-    <addaction name="actionK_Ho_ch"/>
-    <addaction name="actionS_n_Xu_t"/>
+    <addaction name="actionPlan"/>
+    <addaction name="actionProduce"/>
     <addaction name="actionV_t_T"/>
    </widget>
    <addaction name="menuFIle"/>
@@ -287,12 +287,12 @@
     <string>Quit</string>
    </property>
   </action>
-  <action name="actionK_Ho_ch">
+  <action name="actionPlan">
    <property name="text">
     <string>Kế Hoạch</string>
    </property>
   </action>
-  <action name="actionS_n_Xu_t">
+  <action name="actionProduce">
    <property name="text">
     <string>Sản Xuất</string>
    </property>
