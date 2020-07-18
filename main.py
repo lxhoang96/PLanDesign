@@ -3,6 +3,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.uic import loadUi
 import sys
+
 from createDocuments import CreateDocuments
 
 
@@ -39,7 +40,6 @@ class Four(QMainWindow):
             create.save(wb, name[0])
         else:
             pass
-
 
     def file_save2(self):
         settings = QSettings('myorg', 'myapp')
@@ -266,7 +266,8 @@ class Third(QMainWindow):
 
         wb1 = create.closePlan(data, closingDay1.toString('MMMM d, yyyy'))
         wb2 = create.embryosPlan(data1)
-        wb3 = create.inventPlan(data, dateOfCheck1.toString('MMMM d, yyyy'), closingDay1.toString('MMMM d, yyyy'), closingDay_PXXK1.toString('MMMM d, yyyy'))
+        wb3 = create.inventPlan(data, dateOfCheck1.toString('MMMM d, yyyy'), closingDay1.toString('MMMM d, yyyy'),
+                                closingDay_PXXK1.toString('MMMM d, yyyy'))
         wb5 = create.productPlan(data1)
         wb4 = create.embryosPlanPart(data1, data2)
         wb6 = create.productPlanPart(data1, hour, orderDate)
@@ -314,7 +315,7 @@ class Second(QMainWindow):
 
         for n, i in enumerate(part):
             for j in range(int(i)):
-                productCode = str('{}.{}'.format(n+1, j+1))
+                productCode = str('{}.{}'.format(n + 1, j + 1))
                 if productCode in data:
                     pass
                 else:
