@@ -1,5 +1,5 @@
-from openpyxl import load_workbook
-from PyQt5.QtCore import *
+from libs.openpyxl import load_workbook
+from libs.PyQt5 import QtCore
 from part import Part
 from operator import attrgetter
 
@@ -146,7 +146,7 @@ class CreateDocuments:
                 wb.remove_sheet(sheet_name)
         return wb
 
-    def productPlanPart(self, data=None, hPerDay=0, orderday=QDate()):
+    def productPlanPart(self, data=None, hPerDay=0, orderday=QtCore.QDate()):
         for i, j in enumerate(data):
             divine = j[8]
             if not divine.isdigit():

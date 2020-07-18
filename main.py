@@ -1,16 +1,19 @@
-from PyQt5.QtWidgets import *
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
-from PyQt5.uic import loadUi
+# from PyQt5.QtWidgets import *
+# from PyQt5.QtGui import *
+# from PyQt5.QtCore import *
+# from PyQt5.uic import loadUi
 import sys
-
+from libs.PyQt5 import QtCore
+from libs.PyQt5 import QtWidgets
+from libs.PyQt5 import QtGui
+from libs.PyQt5 import uic
 from createDocuments import CreateDocuments
 
 
-class Four(QMainWindow):
+class Four(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
         super(Four, self).__init__(parent)
-        loadUi('window4.ui', self)
+        uic.loadUi('window4.ui', self)
         self.back.clicked.connect(self.on_back)
         self.save.clicked.connect(self.file_save1)
         self.save_2.clicked.connect(self.file_save2)
@@ -20,7 +23,7 @@ class Four(QMainWindow):
         self.save_6.clicked.connect(self.file_save6)
 
     def on_back(self):
-        settings = QSettings('myorg', 'myapp')
+        settings = QtCore.QSettings('myorg', 'myapp')
 
         settings.remove('wbs')
         theclass = Third(self)
@@ -29,12 +32,12 @@ class Four(QMainWindow):
         theclass.show()
 
     def file_save1(self):
-        settings = QSettings('myorg', 'myapp')
+        settings = QtCore.QSettings('myorg', 'myapp')
 
         wb = settings.value('wb1', )
 
         create = CreateDocuments()
-        name = QFileDialog.getSaveFileName(self, 'Save File')
+        name = QtWidgets.QFileDialog.getSaveFileName(self, 'Save File')
         if name[0]:
             print(name[0])
             create.save(wb, name[0])
@@ -42,10 +45,10 @@ class Four(QMainWindow):
             pass
 
     def file_save2(self):
-        settings = QSettings('myorg', 'myapp')
+        settings = QtCore.QSettings('myorg', 'myapp')
         wb = settings.value('wb2', )
         create = CreateDocuments()
-        name = QFileDialog.getSaveFileName(self, 'Save File')
+        name = QtWidgets.QFileDialog.getSaveFileName(self, 'Save File')
         if name[0]:
             print(name[0])
             create.save(wb, name[0])
@@ -53,10 +56,10 @@ class Four(QMainWindow):
             pass
 
     def file_save3(self):
-        settings = QSettings('myorg', 'myapp')
+        settings = QtCore.QSettings('myorg', 'myapp')
         wb = settings.value('wb3', )
         create = CreateDocuments()
-        name = QFileDialog.getSaveFileName(self, 'Save File')
+        name = QtWidgets.QFileDialog.getSaveFileName(self, 'Save File')
         if name[0]:
             print(name[0])
             create.save(wb, name[0])
@@ -64,10 +67,10 @@ class Four(QMainWindow):
             pass
 
     def file_save4(self):
-        settings = QSettings('myorg', 'myapp')
+        settings = QtCore.QSettings('myorg', 'myapp')
         wb = settings.value('wb4', )
         create = CreateDocuments()
-        name = QFileDialog.getSaveFileName(self, 'Save File')
+        name = QtWidgets.QFileDialog.getSaveFileName(self, 'Save File')
         if name[0]:
             print(name[0])
             create.save(wb, name[0])
@@ -75,10 +78,10 @@ class Four(QMainWindow):
             pass
 
     def file_save5(self):
-        settings = QSettings('myorg', 'myapp')
+        settings = QtCore.QSettings('myorg', 'myapp')
         wb = settings.value('wb5', )
         create = CreateDocuments()
-        name = QFileDialog.getSaveFileName(self, 'Save File')
+        name = QtWidgets.QFileDialog.getSaveFileName(self, 'Save File')
         if name[0]:
             print(name[0])
             create.save(wb, name[0])
@@ -86,22 +89,22 @@ class Four(QMainWindow):
             pass
 
     def file_save6(self):
-        settings = QSettings('myorg', 'myapp')
+        settings = QtCore.QSettings('myorg', 'myapp')
         wb = settings.value('wb6', )
         create = CreateDocuments()
-        name = QFileDialog.getSaveFileName(self, 'Save File')
+        name = QtWidgets.QFileDialog.getSaveFileName(self, 'Save File')
         if name[0]:
             create.save(wb, name[0])
         else:
             pass
 
 
-class Third(QMainWindow):
+class Third(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
         super(Third, self).__init__(parent)
-        loadUi('window3.ui', self)
-        reg_ex = QRegExp('^[0-9]{1,2}$')
-        validator = QRegExpValidator(reg_ex)
+        uic.loadUi('window3.ui', self)
+        reg_ex = QtCore.QRegExp('^[0-9]{1,2}$')
+        validator = QtGui.QRegExpValidator(reg_ex)
         self.supplieNum.setValidator(validator)
         self.confirm.clicked.connect(self.on_supplieChange)
         self.clear.clicked.connect(self.clear_table)
@@ -131,20 +134,20 @@ class Third(QMainWindow):
             if supplieItem in data:
                 pass
             else:
-                reg_ex = QRegExp('^[0-9]{1,100}$')
-                validator = QRegExpValidator(reg_ex)
-                lineEdit = QLineEdit()
+                reg_ex = QtCore.QRegExp('^[0-9]{1,100}$')
+                validator = QtGui.QRegExpValidator(reg_ex)
+                lineEdit = QtWidgets.QLineEdit()
                 lineEdit.setValidator(validator)
                 rowPosition = self.supplieTable.rowCount()
                 self.supplieTable.insertRow(rowPosition)
-                self.supplieTable.setCellWidget(rowPosition, 0, QLineEdit(supplieItem))
-                self.supplieTable.setCellWidget(rowPosition, 1, QLineEdit())
+                self.supplieTable.setCellWidget(rowPosition, 0, QtWidgets.QLineEdit(supplieItem))
+                self.supplieTable.setCellWidget(rowPosition, 1, QtWidgets.QLineEdit())
                 self.supplieTable.setCellWidget(rowPosition, 2, lineEdit)
-                self.supplieTable.setCellWidget(rowPosition, 3, QLineEdit())
-                self.supplieTable.setCellWidget(rowPosition, 4, QDateEdit(QDate(2020, 1, 1)))
-                self.supplieTable.setCellWidget(rowPosition, 5, QDateEdit(QDate(2020, 1, 1)))
-                self.supplieTable.setCellWidget(rowPosition, 6, QDateEdit(QDate(2020, 1, 1)))
-                self.supplieTable.setCellWidget(rowPosition, 7, QDateEdit(QDate(2020, 1, 1)))
+                self.supplieTable.setCellWidget(rowPosition, 3, QtWidgets.QLineEdit())
+                self.supplieTable.setCellWidget(rowPosition, 4, QtWidgets.QDateEdit(QtCore.QDate(2020, 1, 1)))
+                self.supplieTable.setCellWidget(rowPosition, 5, QtWidgets.QDateEdit(QtCore.QDate(2020, 1, 1)))
+                self.supplieTable.setCellWidget(rowPosition, 6, QtWidgets.QDateEdit(QtCore.QDate(2020, 1, 1)))
+                self.supplieTable.setCellWidget(rowPosition, 7, QtWidgets.QDateEdit(QtCore.QDate(2020, 1, 1)))
 
     def on_supplieChange(self):
 
@@ -153,20 +156,20 @@ class Third(QMainWindow):
             supplieNum = int(supplieNum)
 
             for i in range(0, supplieNum):
-                reg_ex = QRegExp('^[0-9]{1,100}$')
-                validator = QRegExpValidator(reg_ex)
-                lineEdit = QLineEdit()
+                reg_ex = QtCore.QRegExp('^[0-9]{1,100}$')
+                validator = QtGui.QRegExpValidator(reg_ex)
+                lineEdit = QtWidgets.QLineEdit()
                 lineEdit.setValidator(validator)
                 rowPosition = self.supplieTable.rowCount()
                 self.supplieTable.insertRow(rowPosition)
-                self.supplieTable.setCellWidget(rowPosition, 0, QLineEdit())
-                self.supplieTable.setCellWidget(rowPosition, 1, QLineEdit())
+                self.supplieTable.setCellWidget(rowPosition, 0, QtWidgets.QLineEdit())
+                self.supplieTable.setCellWidget(rowPosition, 1, QtWidgets.QLineEdit())
                 self.supplieTable.setCellWidget(rowPosition, 2, lineEdit)
-                self.supplieTable.setCellWidget(rowPosition, 3, QLineEdit())
-                self.supplieTable.setCellWidget(rowPosition, 4, QDateEdit(QDate(2020, 1, 1)))
-                self.supplieTable.setCellWidget(rowPosition, 5, QDateEdit(QDate(2020, 1, 1)))
-                self.supplieTable.setCellWidget(rowPosition, 6, QDateEdit(QDate(2020, 1, 1)))
-                self.supplieTable.setCellWidget(rowPosition, 7, QDateEdit(QDate(2020, 1, 1)))
+                self.supplieTable.setCellWidget(rowPosition, 3, QtWidgets.QLineEdit())
+                self.supplieTable.setCellWidget(rowPosition, 4, QtWidgets.QDateEdit(QtCore.QDate(2020, 1, 1)))
+                self.supplieTable.setCellWidget(rowPosition, 5, QtWidgets.QDateEdit(QtCore.QDate(2020, 1, 1)))
+                self.supplieTable.setCellWidget(rowPosition, 6, QtWidgets.QDateEdit(QtCore.QDate(2020, 1, 1)))
+                self.supplieTable.setCellWidget(rowPosition, 7, QtWidgets.QDateEdit(QtCore.QDate(2020, 1, 1)))
         else:
             pass
 
@@ -174,7 +177,7 @@ class Third(QMainWindow):
         self.supplieTable.setRowCount(0)
 
     def saveInstance(self):
-        settings = QSettings('myorg', 'myapp')
+        settings = QtCore.QSettings('myorg', 'myapp')
 
         rows = self.supplieTable.rowCount()
 
@@ -190,7 +193,7 @@ class Third(QMainWindow):
                     if it and it.text():
                         pass
                     else:
-                        item = QLineEdit()
+                        item = QtWidgets.QLineEdit()
                         item.setText("")
                         self.supplieTable.setCellWidget(row, column, item)
                     data[row].append(self.supplieTable.cellWidget(row, column).text())
@@ -200,7 +203,7 @@ class Third(QMainWindow):
             settings.setValue('bang3', data)
 
     def restoreSettings(self):
-        settings = QSettings('myorg', 'myapp')
+        settings = QtCore.QSettings('myorg', 'myapp')
 
         data = []
         data = settings.value('bang3', data)
@@ -209,20 +212,20 @@ class Third(QMainWindow):
             pass
         else:
             for row in range(numrows):
-                reg_ex = QRegExp('^[0-9]{1,100}$')
-                validator = QRegExpValidator(reg_ex)
-                lineEdit = QLineEdit(str(data[row][2]))
+                reg_ex = QtCore.QRegExp('^[0-9]{1,100}$')
+                validator = QtGui.QRegExpValidator(reg_ex)
+                lineEdit = QtWidgets.QLineEdit(str(data[row][2]))
                 lineEdit.setValidator(validator)
                 rowPosition = self.supplieTable.rowCount()
                 self.supplieTable.insertRow(rowPosition)
-                self.supplieTable.setCellWidget(rowPosition, 0, QLineEdit(str(data[row][0])))
-                self.supplieTable.setCellWidget(rowPosition, 1, QLineEdit(str(data[row][1])))
+                self.supplieTable.setCellWidget(rowPosition, 0, QtWidgets.QLineEdit(str(data[row][0])))
+                self.supplieTable.setCellWidget(rowPosition, 1, QtWidgets.QLineEdit(str(data[row][1])))
                 self.supplieTable.setCellWidget(rowPosition, 2, lineEdit)
-                self.supplieTable.setCellWidget(rowPosition, 3, QLineEdit(str(data[row][3])))
-                self.supplieTable.setCellWidget(rowPosition, 4, QDateEdit(QDate(data[row][4])))
-                self.supplieTable.setCellWidget(rowPosition, 5, QDateEdit(QDate(data[row][5])))
-                self.supplieTable.setCellWidget(rowPosition, 6, QDateEdit(QDate(data[row][6])))
-                self.supplieTable.setCellWidget(rowPosition, 7, QDateEdit(QDate(data[row][7])))
+                self.supplieTable.setCellWidget(rowPosition, 3, QtWidgets.QLineEdit(str(data[row][3])))
+                self.supplieTable.setCellWidget(rowPosition, 4, QtWidgets.QDateEdit(QtCore.QDate(data[row][4])))
+                self.supplieTable.setCellWidget(rowPosition, 5, QtWidgets.QDateEdit(QtCore.QDate(data[row][5])))
+                self.supplieTable.setCellWidget(rowPosition, 6, QtWidgets.QDateEdit(QtCore.QDate(data[row][6])))
+                self.supplieTable.setCellWidget(rowPosition, 7, QtWidgets.QDateEdit(QtCore.QDate(data[row][7])))
 
     def on_back(self):
         Third.saveInstance(self)
@@ -235,14 +238,14 @@ class Third(QMainWindow):
         Third.saveInstance(self)
         theclass = Four(self)
 
-        settings = QSettings('myorg', 'myapp')
+        settings = QtCore.QSettings('myorg', 'myapp')
         orderDate = settings.value('dateOrder', '')
         deliDate = settings.value('deliveryDate', '')
         name = settings.value('ten', '')
         data = []
         data = settings.value('bang', data)
 
-        settings1 = QSettings('myorg', 'mysetting')
+        settings1 = QtCore.QSettings('myorg', 'mysetting')
         hour = settings1.value('minWorkh', '')
         hour = int(hour)
         closingDay = settings1.value('closingDay', '')
@@ -282,12 +285,12 @@ class Third(QMainWindow):
         theclass.show()
 
 
-class Second(QMainWindow):
+class Second(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
         super(Second, self).__init__(parent)
-        loadUi('window2.ui', self)
-        reg_ex = QRegExp('^[0-9]{1,100}$')
-        validator = QRegExpValidator(reg_ex)
+        uic.loadUi('window2.ui', self)
+        reg_ex = QtCore.QRegExp('^[0-9]{1,100}$')
+        validator = QtGui.QRegExpValidator(reg_ex)
         self.lineNum.setValidator(validator)
         self.confirm.clicked.connect(self.on_productChange)
         self.clear.clicked.connect(self.clear_table)
@@ -320,30 +323,30 @@ class Second(QMainWindow):
                     pass
                 else:
 
-                    reg_ex1 = QRegExp('^[0-9]{1,1}$')
-                    validator = QRegExpValidator(reg_ex1)
-                    lineEdit1 = QLineEdit()
+                    reg_ex1 = QtCore.QRegExp('^[0-9]{1,1}$')
+                    validator = QtGui.QRegExpValidator(reg_ex1)
+                    lineEdit1 = QtWidgets.QLineEdit()
                     lineEdit1.setValidator(validator)
-                    reg_ex = QRegExp('^[0-9]{1,10}$')
-                    validator = QRegExpValidator(reg_ex)
-                    lineEdit = QLineEdit()
+                    reg_ex = QtCore.QRegExp('^[0-9]{1,10}$')
+                    validator = QtGui.QRegExpValidator(reg_ex)
+                    lineEdit = QtWidgets.QLineEdit()
                     lineEdit.setValidator(validator)
-                    lineEdit2 = QLineEdit()
+                    lineEdit2 = QtWidgets.QLineEdit()
                     lineEdit2.setValidator(validator)
-                    lineEdit3 = QLineEdit()
+                    lineEdit3 = QtWidgets.QLineEdit()
                     lineEdit3.setValidator(validator)
 
                     rowPosition = self.lineTable.rowCount()
                     self.lineTable.insertRow(rowPosition)
 
-                    self.lineTable.setCellWidget(rowPosition, 0, QLineEdit(productCode))
-                    self.lineTable.setCellWidget(rowPosition, 1, QLineEdit())
-                    self.lineTable.setCellWidget(rowPosition, 2, QLineEdit())
+                    self.lineTable.setCellWidget(rowPosition, 0, QtWidgets.QLineEdit(productCode))
+                    self.lineTable.setCellWidget(rowPosition, 1, QtWidgets.QLineEdit())
+                    self.lineTable.setCellWidget(rowPosition, 2, QtWidgets.QLineEdit())
                     self.lineTable.setCellWidget(rowPosition, 3, lineEdit2)
                     self.lineTable.setCellWidget(rowPosition, 4, lineEdit3)
-                    self.lineTable.setCellWidget(rowPosition, 5, QLineEdit())
-                    self.lineTable.setCellWidget(rowPosition, 6, QLineEdit())
-                    self.lineTable.setCellWidget(rowPosition, 7, QLineEdit())
+                    self.lineTable.setCellWidget(rowPosition, 5, QtWidgets.QLineEdit())
+                    self.lineTable.setCellWidget(rowPosition, 6, QtWidgets.QLineEdit())
+                    self.lineTable.setCellWidget(rowPosition, 7, QtWidgets.QLineEdit())
                     self.lineTable.setCellWidget(rowPosition, 8, lineEdit)
                     self.lineTable.setCellWidget(rowPosition, 9, lineEdit1)
 
@@ -353,31 +356,31 @@ class Second(QMainWindow):
             lineNum = int(lineNum)
 
             for i in range(0, lineNum):
-                reg_ex = QRegExp('^[0-9]{1,10}$')
-                validator = QRegExpValidator(reg_ex)
-                lineEdit = QLineEdit()
+                reg_ex = QtCore.QRegExp('^[0-9]{1,10}$')
+                validator = QtGui.QRegExpValidator(reg_ex)
+                lineEdit = QtWidgets.QLineEdit()
                 lineEdit.setValidator(validator)
-                lineEdit2 = QLineEdit()
+                lineEdit2 = QtWidgets.QLineEdit()
                 lineEdit2.setValidator(validator)
-                lineEdit3 = QLineEdit()
+                lineEdit3 = QtWidgets.QLineEdit()
                 lineEdit3.setValidator(validator)
-                reg_ex1 = QRegExp('^[0-9]{1,1}$')
-                validator = QRegExpValidator(reg_ex1)
+                reg_ex1 = QtCore.QRegExp('^[0-9]{1,1}$')
+                validator = QtGui.QRegExpValidator(reg_ex1)
 
-                lineEdit1 = QLineEdit()
+                lineEdit1 = QtWidgets.QLineEdit()
                 lineEdit1.setValidator(validator)
 
                 rowPosition = self.lineTable.rowCount()
                 self.lineTable.insertRow(rowPosition)
 
-                self.lineTable.setCellWidget(rowPosition, 0, QLineEdit())
-                self.lineTable.setCellWidget(rowPosition, 1, QLineEdit())
-                self.lineTable.setCellWidget(rowPosition, 2, QLineEdit())
+                self.lineTable.setCellWidget(rowPosition, 0, QtWidgets.QLineEdit())
+                self.lineTable.setCellWidget(rowPosition, 1, QtWidgets.QLineEdit())
+                self.lineTable.setCellWidget(rowPosition, 2, QtWidgets.QLineEdit())
                 self.lineTable.setCellWidget(rowPosition, 3, lineEdit2)
                 self.lineTable.setCellWidget(rowPosition, 4, lineEdit3)
-                self.lineTable.setCellWidget(rowPosition, 5, QLineEdit())
-                self.lineTable.setCellWidget(rowPosition, 6, QLineEdit())
-                self.lineTable.setCellWidget(rowPosition, 7, QLineEdit())
+                self.lineTable.setCellWidget(rowPosition, 5, QtWidgets.QLineEdit())
+                self.lineTable.setCellWidget(rowPosition, 6, QtWidgets.QLineEdit())
+                self.lineTable.setCellWidget(rowPosition, 7, QtWidgets.QLineEdit())
                 self.lineTable.setCellWidget(rowPosition, 8, lineEdit)
                 self.lineTable.setCellWidget(rowPosition, 9, lineEdit1)
         else:
@@ -387,7 +390,7 @@ class Second(QMainWindow):
         self.lineTable.setRowCount(0)
 
     def saveInstance(self):
-        settings = QSettings('myorg', 'myapp')
+        settings = QtCore.QSettings('myorg', 'myapp')
 
         rows = self.lineTable.rowCount()
         columns = self.lineTable.columnCount()
@@ -400,7 +403,7 @@ class Second(QMainWindow):
                 if it and it.text():
                     pass
                 else:
-                    item = QLineEdit()
+                    item = QtWidgets.QLineEdit()
                     item.setText("")
                     self.lineTable.setCellWidget(row, column, item)
                 data[row].append(self.lineTable.cellWidget(row, column).text())
@@ -408,7 +411,7 @@ class Second(QMainWindow):
         settings.setValue('bang2', data)
 
     def restoreSettings(self):
-        settings = QSettings('myorg', 'myapp')
+        settings = QtCore.QSettings('myorg', 'myapp')
 
         data = []
         data = settings.value('bang2', data)
@@ -419,27 +422,27 @@ class Second(QMainWindow):
             for row in range(numrows):
                 rowPosition = self.lineTable.rowCount()
                 self.lineTable.insertRow(rowPosition)
-                reg_ex = QRegExp('^[0-9]{1,10}$')
-                validator = QRegExpValidator(reg_ex)
-                lineEdit = QLineEdit(str(data[row][8]))
+                reg_ex = QtCore.QRegExp('^[0-9]{1,10}$')
+                validator = QtGui.QRegExpValidator(reg_ex)
+                lineEdit = QtWidgets.QLineEdit(str(data[row][8]))
                 lineEdit.setValidator(validator)
-                lineEdit2 = QLineEdit(str(data[row][3]))
+                lineEdit2 = QtWidgets.QLineEdit(str(data[row][3]))
                 lineEdit2.setValidator(validator)
-                lineEdit3 = QLineEdit(str(data[row][4]))
+                lineEdit3 = QtWidgets.QLineEdit(str(data[row][4]))
                 lineEdit3.setValidator(validator)
-                reg_ex1 = QRegExp('^[0-9]{1,1}$')
-                validator = QRegExpValidator(reg_ex1)
-                lineEdit1 = QLineEdit(str(data[row][9]))
+                reg_ex1 = QtCore.QRegExp('^[0-9]{1,1}$')
+                validator = QtGui.QRegExpValidator(reg_ex1)
+                lineEdit1 = QtWidgets.QLineEdit(str(data[row][9]))
                 lineEdit1.setValidator(validator)
 
-                self.lineTable.setCellWidget(rowPosition, 0, QLineEdit(str(data[row][0])))
-                self.lineTable.setCellWidget(rowPosition, 1, QLineEdit(str(data[row][1])))
-                self.lineTable.setCellWidget(rowPosition, 2, QLineEdit(str(data[row][2])))
+                self.lineTable.setCellWidget(rowPosition, 0, QtWidgets.QLineEdit(str(data[row][0])))
+                self.lineTable.setCellWidget(rowPosition, 1, QtWidgets.QLineEdit(str(data[row][1])))
+                self.lineTable.setCellWidget(rowPosition, 2, QtWidgets.QLineEdit(str(data[row][2])))
                 self.lineTable.setCellWidget(rowPosition, 3, lineEdit2)
                 self.lineTable.setCellWidget(rowPosition, 4, lineEdit3)
-                self.lineTable.setCellWidget(rowPosition, 5, QLineEdit(str(data[row][5])))
-                self.lineTable.setCellWidget(rowPosition, 6, QLineEdit(str(data[row][6])))
-                self.lineTable.setCellWidget(rowPosition, 7, QLineEdit(str(data[row][7])))
+                self.lineTable.setCellWidget(rowPosition, 5, QtWidgets.QLineEdit(str(data[row][5])))
+                self.lineTable.setCellWidget(rowPosition, 6, QtWidgets.QLineEdit(str(data[row][6])))
+                self.lineTable.setCellWidget(rowPosition, 7, QtWidgets.QLineEdit(str(data[row][7])))
                 self.lineTable.setCellWidget(rowPosition, 8, lineEdit)
                 self.lineTable.setCellWidget(rowPosition, 9, lineEdit1)
 
@@ -453,7 +456,7 @@ class Second(QMainWindow):
     def on_next(self):
         Second.saveInstance(self)
         theclass = Third(self)
-        settings = QSettings('myorg', 'myapp')
+        settings = QtCore.QSettings('myorg', 'myapp')
         if settings.contains('bang3'):
             theclass.restoreSettings()
 
@@ -469,12 +472,12 @@ class Second(QMainWindow):
         theclass.show()
 
 
-class First(QMainWindow):
+class First(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
         super(First, self).__init__(parent)
-        loadUi('window1.ui', self)
-        reg_ex = QRegExp('^[0-9]{1,5}$')
-        validator = QRegExpValidator(reg_ex)
+        uic.loadUi('window1.ui', self)
+        reg_ex = QtCore.QRegExp('^[0-9]{1,5}$')
+        validator = QtGui.QRegExpValidator(reg_ex)
         self.productNum.setValidator(validator)
         self.confirm.clicked.connect(self.on_productNum)
         self.clear.clicked.connect(self.clear_table)
@@ -493,24 +496,24 @@ class First(QMainWindow):
             for i in range(0, productNum):
                 rowPosition = self.tableWidget.rowCount()
                 self.tableWidget.insertRow(rowPosition)
-                lineEdit = QLineEdit()
-                reg_ex = QRegExp('^[0-9]{1,10}$')
-                validator = QRegExpValidator(reg_ex)
+                lineEdit = QtWidgets.QLineEdit()
+                reg_ex = QtCore.QRegExp('^[0-9]{1,10}$')
+                validator = QtGui.QRegExpValidator(reg_ex)
                 lineEdit.setValidator(validator)
-                lineEdit1 = QLineEdit()
-                reg_ex = QRegExp('^[0-9]{1,2}$')
-                validator = QRegExpValidator(reg_ex)
+                lineEdit1 = QtWidgets.QLineEdit()
+                reg_ex = QtCore.QRegExp('^[0-9]{1,2}$')
+                validator = QtGui.QRegExpValidator(reg_ex)
                 lineEdit1.setValidator(validator)
-                lineEdit2 = QLineEdit()
-                reg_ex = QRegExp('^[0-9]{1,10}$')
-                validator = QRegExpValidator(reg_ex)
+                lineEdit2 = QtWidgets.QLineEdit()
+                reg_ex = QtCore.QRegExp('^[0-9]{1,10}$')
+                validator = QtGui.QRegExpValidator(reg_ex)
                 lineEdit2.setValidator(validator)
-                self.tableWidget.setCellWidget(rowPosition, 0, QLineEdit())
-                self.tableWidget.setCellWidget(rowPosition, 1, QLineEdit())
-                self.tableWidget.setCellWidget(rowPosition, 2, QLineEdit())
+                self.tableWidget.setCellWidget(rowPosition, 0, QtWidgets.QLineEdit())
+                self.tableWidget.setCellWidget(rowPosition, 1, QtWidgets.QLineEdit())
+                self.tableWidget.setCellWidget(rowPosition, 2, QtWidgets.QLineEdit())
                 self.tableWidget.setCellWidget(rowPosition, 5, lineEdit2)
-                self.tableWidget.setCellWidget(rowPosition, 6, QLineEdit())
-                self.tableWidget.setCellWidget(rowPosition, 7, QLineEdit())
+                self.tableWidget.setCellWidget(rowPosition, 6, QtWidgets.QLineEdit())
+                self.tableWidget.setCellWidget(rowPosition, 7, QtWidgets.QLineEdit())
                 self.tableWidget.setCellWidget(rowPosition, 3, lineEdit)
                 self.tableWidget.setCellWidget(rowPosition, 4, lineEdit1)
 
@@ -532,7 +535,7 @@ class First(QMainWindow):
         theclass = Second(self)
         First.saveInstance(self)
 
-        settings = QSettings('myorg', 'myapp')
+        settings = QtCore.QSettings('myorg', 'myapp')
         if settings.contains('bang2'):
             theclass.restoreSettings()
 
@@ -552,14 +555,14 @@ class First(QMainWindow):
         theclass.show()
 
     def on_new(self):
-        settings = QSettings('myorg', 'myapp')
+        settings = QtCore.QSettings('myorg', 'myapp')
         settings.clear()
 
         self.hide()
         self.show()
 
     def saveInstance(self):
-        settings = QSettings('myorg', 'myapp')
+        settings = QtCore.QSettings('myorg', 'myapp')
         settings.setValue('ten', self.name.text())
         settings.setValue('loai', self.productNum.text())
         settings.setValue('dateOrder', self.dateOfOrder.date())
@@ -575,7 +578,7 @@ class First(QMainWindow):
                 if it and it.text():
                     pass
                 else:
-                    item = QLineEdit()
+                    item = QtWidgets.QLineEdit()
                     item.setText("")
                     self.tableWidget.setCellWidget(row, column, item)
                 data[row].append(self.tableWidget.cellWidget(row, column).text())
@@ -583,7 +586,7 @@ class First(QMainWindow):
         settings.setValue('bang', data)
 
     def restoreSettings(self):
-        settings = QSettings('myorg', 'myapp')
+        settings = QtCore.QSettings('myorg', 'myapp')
         name = settings.value('ten', '')
         productNum = settings.value('loai', '')
         orderDate = settings.value('dateOrder', '')
@@ -591,8 +594,8 @@ class First(QMainWindow):
 
         self.name.setText(name)
         self.productNum.setText(productNum)
-        self.dateOfOrder.setDate(QDate(orderDate))
-        self.deliveryDate.setDate(QDate(deliDate))
+        self.dateOfOrder.setDate(QtCore.QDate(orderDate))
+        self.deliveryDate.setDate(QtCore.QDate(deliDate))
         data = []
         data = settings.value('bang', data)
         numrows = len(data)
@@ -602,37 +605,37 @@ class First(QMainWindow):
             for row in range(numrows):
                 rowPosition = self.tableWidget.rowCount()
                 self.tableWidget.insertRow(rowPosition)
-                lineEdit = QLineEdit(str(data[row][3]))
-                reg_ex = QRegExp('^[0-9]{1,1000}$')
-                validator = QRegExpValidator(reg_ex)
+                lineEdit = QtWidgets.QLineEdit(str(data[row][3]))
+                reg_ex = QtCore.QRegExp('^[0-9]{1,1000}$')
+                validator = QtGui.QRegExpValidator(reg_ex)
                 lineEdit.setValidator(validator)
-                lineEdit1 = QLineEdit(str(data[row][4]))
-                reg_ex = QRegExp('^[0-9]{1,2}$')
-                validator = QRegExpValidator(reg_ex)
+                lineEdit1 = QtWidgets.QLineEdit(str(data[row][4]))
+                reg_ex = QtCore.QRegExp('^[0-9]{1,2}$')
+                validator = QtGui.QRegExpValidator(reg_ex)
                 lineEdit1.setValidator(validator)
-                lineEdit2 = QLineEdit(str(data[row][5]))
-                reg_ex = QRegExp('^[0-9]{1,2}$')
-                validator = QRegExpValidator(reg_ex)
+                lineEdit2 = QtWidgets.QLineEdit(str(data[row][5]))
+                reg_ex = QtCore.QRegExp('^[0-9]{1,2}$')
+                validator = QtGui.QRegExpValidator(reg_ex)
                 lineEdit2.setValidator(validator)
-                self.tableWidget.setCellWidget(rowPosition, 0, QLineEdit(str(data[row][0])))
-                self.tableWidget.setCellWidget(rowPosition, 1, QLineEdit(str(data[row][1])))
-                self.tableWidget.setCellWidget(rowPosition, 2, QLineEdit(str(data[row][2])))
+                self.tableWidget.setCellWidget(rowPosition, 0, QtWidgets.QLineEdit(str(data[row][0])))
+                self.tableWidget.setCellWidget(rowPosition, 1, QtWidgets.QLineEdit(str(data[row][1])))
+                self.tableWidget.setCellWidget(rowPosition, 2, QtWidgets.QLineEdit(str(data[row][2])))
                 self.tableWidget.setCellWidget(rowPosition, 3, lineEdit)
                 self.tableWidget.setCellWidget(rowPosition, 4, lineEdit1)
                 self.tableWidget.setCellWidget(rowPosition, 5, lineEdit2)
-                self.tableWidget.setCellWidget(rowPosition, 6, QLineEdit(str(data[row][6])))
-                self.tableWidget.setCellWidget(rowPosition, 7, QLineEdit(str(data[row][7])))
+                self.tableWidget.setCellWidget(rowPosition, 6, QtWidgets.QLineEdit(str(data[row][6])))
+                self.tableWidget.setCellWidget(rowPosition, 7, QtWidgets.QLineEdit(str(data[row][7])))
 
 
-class SettingPlan(QDialog):
+class SettingPlan(QtWidgets.QDialog):
     def __init__(self, parent=None):
         super(SettingPlan, self).__init__(parent)
-        loadUi('settingPlan.ui', self)
+        uic.loadUi('settingPlan.ui', self)
         self.save.clicked.connect(self.on_save)
         self.restoreSettings()
 
     def on_save(self):
-        settings = QSettings('myorg', 'mysetting')
+        settings = QtCore.QSettings('myorg', 'mysetting')
         settings.setValue('dateOfCheck', self.dateOfCheck.text())
         settings.setValue('closingDay', self.closingDay.text())
         settings.setValue('closingDay_PXXK', self.closingDay_PXXK.text())
@@ -640,7 +643,7 @@ class SettingPlan(QDialog):
         settings.setValue('maxWorkh', self.maxWorkh.text())
 
     def restoreSettings(self):
-        settings = QSettings('myorg', 'mysetting')
+        settings = QtCore.QSettings('myorg', 'mysetting')
         dateOfCheck = settings.value('dateOfCheck', '')
         closingDay = settings.value('closingDay', '')
         closingDay_PXXK = settings.value('closingDay_PXXK', '')
@@ -654,20 +657,20 @@ class SettingPlan(QDialog):
         self.maxWorkh.setText(maxWorkh)
 
 
-class SettingProduce(QDialog):
+class SettingProduce(QtWidgets.QDialog):
     def __init__(self, parent=None):
         super(SettingProduce, self).__init__(parent)
-        loadUi('settingProduce.ui', self)
+        uic.loadUi('settingProduce.ui', self)
         self.save.clicked.connect(self.on_save)
         self.restoreSettings()
 
     def on_save(self):
-        settings = QSettings('myorg', 'mysetting')
+        settings = QtCore.QSettings('myorg', 'mysetting')
         settings.setValue('inProgress', self.inProgress.text())
         settings.setValue('endProgress', self.endProgress.text())
 
     def restoreSettings(self):
-        settings = QSettings('myorg', 'mysetting')
+        settings = QtCore.QSettings('myorg', 'mysetting')
         inProgress = settings.value('inProgress', '')
         endProgress = settings.value('endProgress', '')
 
@@ -676,8 +679,8 @@ class SettingProduce(QDialog):
 
 
 def main():
-    app = QApplication(sys.argv)
-    settings = QSettings('myorg', 'myapp')
+    app = QtWidgets.QApplication(sys.argv)
+    settings = QtCore.QSettings('myorg', 'myapp')
     settings.clear()
     main = First()
     main.show()
