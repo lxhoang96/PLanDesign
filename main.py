@@ -1,13 +1,240 @@
-# from PyQt5.QtWidgets import *
-# from PyQt5.QtGui import *
-# from PyQt5.QtCore import *
-# from PyQt5.uic import loadUi
 import sys
-from libs.PyQt5 import QtCore
-from libs.PyQt5 import QtWidgets
-from libs.PyQt5 import QtGui
-from libs.PyQt5 import uic
-from createDocuments import CreateDocuments
+from PyQt5 import QtCore
+from PyQt5 import QtWidgets
+from PyQt5 import QtGui
+from PyQt5 import uic
+from openpyxl import load_workbook
+from operator import attrgetter
+
+
+class Part:
+    def __init__(self, name='', line='', priority=0, day=0, number=0, startDate=QtCore.QDate(), endDate=QtCore.QDate()):
+        self.name = name
+        self.line = line
+        self.startdate = startDate
+        self.day = day
+        self.priority = priority
+        self.endDate = endDate
+        self.number = number
+
+
+class CreateDocuments:
+    def __init__(self, name='', orderDate=''):
+        self.name = name
+        self.orderDate = orderDate
+
+    def closePlan(self, data=None, closeDate=''):
+        if not data:
+            pass
+
+        wb = load_workbook("form_copy.xlsx")
+        sheets = wb.sheetnames
+        Sheet1 = wb[sheets[0]]
+        Sheet1.cell(row=7, column=1).value = self.name
+        Sheet1.cell(row=7, column=8).value = closeDate
+        # Set value to table
+        rows = len(data)
+        for row in range(rows):
+            for column in range(1,3):
+                Sheet1.cell(row=7+row, column=3+column).value = data[row][column]
+            Sheet1.cell(row=7+row, column=2).value = data[row][0]
+            Sheet1.cell(row=7+row, column=12).value = data[row][5]
+            Sheet1.cell(row=7+row, column=15).value = data[row][3]
+            Sheet1.cell(row=7+row, column=17).value = data[row][6]
+
+
+        # keep only first Sheet
+        for s in sheets:
+            if s != 'B01':
+                sheet_name = wb[s]
+                wb.remove(sheet_name)
+        return wb
+
+    def embryosPlan(self, data=None):
+        if not data:
+            pass
+
+        wb = load_workbook("form_copy.xlsx")
+        sheets = wb.sheetnames
+        Sheet1 = wb[sheets[1]]
+        # Set value to table
+        rows = len(data)
+        for row in range(rows):
+            Sheet1.cell(row=6 + row, column=1).value = row + 1
+            for column in range(0, 2):
+                Sheet1.cell(row=6 + row, column=2 + column).value = data[row][column+1]
+            for column in range(5,7):
+                Sheet1.cell(row=6 + row, column=column).value = data[row][column]
+
+        # keep only second Sheet
+        for s in sheets:
+            if s != 'B02':
+                sheet_name = wb[s]
+                wb.remove(sheet_name)
+        return wb
+
+    def inventPlan(self, data=None, dateOfCheck='', closeDate='', closingDay_PXXK=''):
+        if not data:
+            pass
+
+        wb = load_workbook("form_copy.xlsx")
+        sheets = wb.sheetnames
+        Sheet1 = wb[sheets[2]]
+        # Set value to table
+        rows = len(data)
+        Sheet1.cell(row=6, column=6).value = dateOfCheck
+        Sheet1.cell(row=6, column=7).value = closeDate
+        Sheet1.cell(row=6, column=9).value = closingDay_PXXK
+
+        for row in range(rows):
+            Sheet1.cell(row=6 + row, column=1).value = row + 1
+            Sheet1.cell(row=6 + row, column=2).value = data[row][1]
+            Sheet1.cell(row=6 + row, column=3).value = data[row][0]
+            Sheet1.cell(row=6 + row, column=4).value = data[row][3]
+            Sheet1.cell(row=6 + row, column=5).value = data[row][5]
+
+
+
+        # keep only second Sheet
+        for s in sheets:
+            if s != 'B03':
+                sheet_name = wb[s]
+                wb.remove(sheet_name)
+        return wb
+
+    def embryosPlanPart(self, data=None, data1=None):
+        if not data:
+            pass
+        if not data1:
+            pass
+
+        wb = load_workbook("form_copy.xlsx")
+        sheets = wb.sheetnames
+        Sheet1 = wb[sheets[4]]
+        # Set value to table
+        rows = len(data)
+        for row in range(rows):
+            Sheet1.cell(row=7 + row, column=2).value = data[row][1]
+            Sheet1.cell(row=7 + row, column=3).value = data1[row][1]
+            Sheet1.cell(row=7 + row, column=9).value = data[row][6]
+            Sheet1.cell(row=7 + row, column=13).value = data[row][8]
+            # Sheet1.cell(row=7 + row, column=9).value = data[row][4]
+
+        # keep only four Sheet
+        for s in sheets:
+            if s != 'B05':
+                sheet_name = wb[s]
+                wb.remove(sheet_name)
+        return wb
+
+    def productPlan(self, data=None):
+        if not data:
+            pass
+
+        wb = load_workbook("form_copy.xlsx")
+        sheets = wb.sheetnames
+        Sheet1 = wb[sheets[5]]
+        # Set value to table
+        rows = len(data)
+        for row in range(rows):
+            Sheet1.cell(row=9 + row, column=1).value = data[row][0]
+            Sheet1.cell(row=9 + row, column=2).value = data[row][1]
+            Sheet1.cell(row=9 + row, column=3).value = data[row][10]
+            Sheet1.cell(row=9 + row, column=5).value = data[row][9]
+            Sheet1.cell(row=9 + row, column=8).value = data[row][7]
+            Sheet1.cell(row=9 + row, column=9).value = data[row][8]
+
+            # Sheet1.cell(row=7 + row, column=9).value = data[row][4]
+
+        # keep only four Sheet
+        for s in sheets:
+            if s != 'B06':
+                sheet_name = wb[s]
+                wb.remove(sheet_name)
+        return wb
+
+    def productPlanPart(self, data=None, hPerDay=0, orderday=QtCore.QDate()):
+        for i, j in enumerate(data):
+            divine = j[10]
+            if not divine.isdigit():
+                data[i][10] = 1
+            else:
+                data[i][10] = int(divine)
+
+        for i, j in enumerate(data):
+            prio = j[11]
+            if not prio.isdigit():
+                data[i][11] = 1
+            else:
+                data[i][11] = int(prio)
+        for i, j in enumerate(data):
+            number = j[6]
+            if not number.isdigit():
+                data[i][6] = 0
+            else:
+                data[i][6] = int(number)
+        if not data:
+            pass
+        for each in data:
+            print(each[6])
+        items = []
+        lines = []
+        priority = []
+        for each in data:
+            hour = int(each[6])/int(each[10])
+            day = int(hour/hPerDay) + 1
+            lines.append(each[9])
+            priority.append(each[11])
+            item = Part(each[1], each[9], each[11], day, each[6])
+            print(each[6])
+            items.append(item)
+
+        new_priority = list(set(priority))
+        new_priority.sort()
+        new_lines = list(set(lines))
+        new_items = []
+        for i in range(len(items)):
+            for j in range(len(new_lines)):
+                new_items.append([])
+                if items[i].line == new_lines[j]:
+                    new_items[j].append(items[i])
+        new_items = list(filter(None, new_items))
+
+        for each in new_items:
+            each.sort(key=attrgetter('priority'))
+            each[0].startDate = orderday
+            each[0].endDate = each[0].startDate.addDays(each[0].day)
+            for i in range(1, len(each)):
+                each[i].startDate = each[i-1].endDate.addDays(1)
+                each[i].endDate = each[i].startDate.addDays(each[i].day)
+
+        final_items = []
+        for item in new_items:
+            for each in item:
+                final_items.append(each)
+
+        wb = load_workbook("form_copy.xlsx")
+        sheets = wb.sheetnames
+        Sheet1 = wb[sheets[6]]
+        # Set value to table
+        for i in range(len(data)):
+            Sheet1.cell(row=6+i, column=1).value = i+1
+
+        for row in range(len(final_items)):
+            Sheet1.cell(row=6 + row, column=2).value = final_items[row].name
+            Sheet1.cell(row=6 + row, column=2 + int(final_items[row].startDate.day())).value = '0'
+            Sheet1.cell(row=6 + row, column=2 + int(final_items[row].endDate.day())).value = final_items[row].number
+
+
+        # keep only seven Sheet
+        for s in sheets:
+            if s != 'B07':
+                sheet_name = wb[s]
+                wb.remove(sheet_name)
+        return wb
+
+    def save(self, wb, part):
+        wb.save(part)
 
 
 class Four(QtWidgets.QMainWindow):
@@ -39,7 +266,7 @@ class Four(QtWidgets.QMainWindow):
         create = CreateDocuments()
         name = QtWidgets.QFileDialog.getSaveFileName(self, 'Save File')
         if name[0]:
-            print(name[0])
+
             create.save(wb, name[0])
         else:
             pass
@@ -50,7 +277,7 @@ class Four(QtWidgets.QMainWindow):
         create = CreateDocuments()
         name = QtWidgets.QFileDialog.getSaveFileName(self, 'Save File')
         if name[0]:
-            print(name[0])
+
             create.save(wb, name[0])
         else:
             pass
@@ -61,7 +288,7 @@ class Four(QtWidgets.QMainWindow):
         create = CreateDocuments()
         name = QtWidgets.QFileDialog.getSaveFileName(self, 'Save File')
         if name[0]:
-            print(name[0])
+
             create.save(wb, name[0])
         else:
             pass
@@ -72,7 +299,7 @@ class Four(QtWidgets.QMainWindow):
         create = CreateDocuments()
         name = QtWidgets.QFileDialog.getSaveFileName(self, 'Save File')
         if name[0]:
-            print(name[0])
+
             create.save(wb, name[0])
         else:
             pass
@@ -83,7 +310,7 @@ class Four(QtWidgets.QMainWindow):
         create = CreateDocuments()
         name = QtWidgets.QFileDialog.getSaveFileName(self, 'Save File')
         if name[0]:
-            print(name[0])
+
             create.save(wb, name[0])
         else:
             pass
@@ -298,6 +525,7 @@ class Second(QtWidgets.QMainWindow):
         self.next.clicked.connect(self.on_next)
         self.actionPlan.triggered.connect(self.on_settingPlan)
         self.actionProduce.triggered.connect(self.on_settingProduce)
+        self.cal.clicked.connect(self.cal_amount)
 
     def on_settingPlan(self):
         dialog = SettingPlan(self)
@@ -327,6 +555,8 @@ class Second(QtWidgets.QMainWindow):
                     validator = QtGui.QRegExpValidator(reg_ex1)
                     lineEdit1 = QtWidgets.QLineEdit()
                     lineEdit1.setValidator(validator)
+                    lineEdit0 = QtWidgets.QLineEdit()
+                    lineEdit0.setValidator(validator)
                     reg_ex = QtCore.QRegExp('^[0-9]{1,10}$')
                     validator = QtGui.QRegExpValidator(reg_ex)
                     lineEdit = QtWidgets.QLineEdit()
@@ -342,13 +572,15 @@ class Second(QtWidgets.QMainWindow):
                     self.lineTable.setCellWidget(rowPosition, 0, QtWidgets.QLineEdit(productCode))
                     self.lineTable.setCellWidget(rowPosition, 1, QtWidgets.QLineEdit())
                     self.lineTable.setCellWidget(rowPosition, 2, QtWidgets.QLineEdit())
-                    self.lineTable.setCellWidget(rowPosition, 3, lineEdit2)
-                    self.lineTable.setCellWidget(rowPosition, 4, lineEdit3)
-                    self.lineTable.setCellWidget(rowPosition, 5, QtWidgets.QLineEdit())
-                    self.lineTable.setCellWidget(rowPosition, 6, QtWidgets.QLineEdit())
+                    self.lineTable.setCellWidget(rowPosition, 3, QtWidgets.QLineEdit())
+                    self.lineTable.setCellWidget(rowPosition, 4, lineEdit0)
+                    self.lineTable.setCellWidget(rowPosition, 5, lineEdit2)
+                    self.lineTable.setCellWidget(rowPosition, 6, lineEdit3)
                     self.lineTable.setCellWidget(rowPosition, 7, QtWidgets.QLineEdit())
-                    self.lineTable.setCellWidget(rowPosition, 8, lineEdit)
-                    self.lineTable.setCellWidget(rowPosition, 9, lineEdit1)
+                    self.lineTable.setCellWidget(rowPosition, 8, QtWidgets.QLineEdit())
+                    self.lineTable.setCellWidget(rowPosition, 9, QtWidgets.QLineEdit())
+                    self.lineTable.setCellWidget(rowPosition, 10, lineEdit)
+                    self.lineTable.setCellWidget(rowPosition, 11, lineEdit1)
 
     def on_productChange(self):
         lineNum = self.lineNum.text()
@@ -366,7 +598,8 @@ class Second(QtWidgets.QMainWindow):
                 lineEdit3.setValidator(validator)
                 reg_ex1 = QtCore.QRegExp('^[0-9]{1,1}$')
                 validator = QtGui.QRegExpValidator(reg_ex1)
-
+                lineEdit0 = QtWidgets.QLineEdit()
+                lineEdit0.setValidator(validator)
                 lineEdit1 = QtWidgets.QLineEdit()
                 lineEdit1.setValidator(validator)
 
@@ -376,15 +609,84 @@ class Second(QtWidgets.QMainWindow):
                 self.lineTable.setCellWidget(rowPosition, 0, QtWidgets.QLineEdit())
                 self.lineTable.setCellWidget(rowPosition, 1, QtWidgets.QLineEdit())
                 self.lineTable.setCellWidget(rowPosition, 2, QtWidgets.QLineEdit())
-                self.lineTable.setCellWidget(rowPosition, 3, lineEdit2)
-                self.lineTable.setCellWidget(rowPosition, 4, lineEdit3)
-                self.lineTable.setCellWidget(rowPosition, 5, QtWidgets.QLineEdit())
-                self.lineTable.setCellWidget(rowPosition, 6, QtWidgets.QLineEdit())
+                self.lineTable.setCellWidget(rowPosition, 3, QtWidgets.QLineEdit())
+                self.lineTable.setCellWidget(rowPosition, 4, lineEdit0)
+                self.lineTable.setCellWidget(rowPosition, 5, lineEdit2)
+                self.lineTable.setCellWidget(rowPosition, 6, lineEdit3)
                 self.lineTable.setCellWidget(rowPosition, 7, QtWidgets.QLineEdit())
-                self.lineTable.setCellWidget(rowPosition, 8, lineEdit)
-                self.lineTable.setCellWidget(rowPosition, 9, lineEdit1)
+                self.lineTable.setCellWidget(rowPosition, 8, QtWidgets.QLineEdit())
+                self.lineTable.setCellWidget(rowPosition, 9, QtWidgets.QLineEdit())
+                self.lineTable.setCellWidget(rowPosition, 10, lineEdit)
+                self.lineTable.setCellWidget(rowPosition, 11, lineEdit1)
         else:
             pass
+
+    def resize_amount(self):
+        settings = QtCore.QSettings('myorg', 'myapp')
+        data = []
+        data = settings.value('bang', data)
+        part = []
+        amount = []
+        stock = []
+        for each in data:
+            part.append(each[4])
+            amount.append(each[3])
+            stock.append(each[7])
+        for n, i in enumerate(part):
+            if not i.isdigit():
+                part[n] = 0
+            else:
+                part[n] = int(i)
+        for n, i in enumerate(amount):
+            if not i.isdigit():
+                amount[n] = 0
+            else:
+                amount[n] = int(i)
+        for n, i in enumerate(stock):
+            if not i.isdigit():
+                stock[n] = 0
+            else:
+                stock[n] = int(i)
+        calculated = [x1 - x2 for (x1, x2) in zip(amount, stock)]
+        amountnew = []
+        for n, i in enumerate(part):
+            for j in range(int(i)):
+                amountnew.append(calculated[n])
+        return amountnew
+
+    def cal_amount(self):
+        amount = self.resize_amount()
+        rows = self.lineTable.rowCount()
+        settings = QtCore.QSettings('myorg', 'mysetting')
+        inProgress = settings.value('inProgress', '')
+        endProgress = settings.value('endProgress', '')
+
+        for row in range(rows):
+            column4 = self.lineTable.cellWidget(row, 4)
+            if not column4.text():
+                column4.setText('0')
+            coef = column4.text()
+            print(coef)
+            column5 = self.lineTable.cellWidget(row, 5)
+            if not column5.text():
+                column5.setText('0')
+            odd = column5.text()
+            print(odd)
+
+            column3 = self.lineTable.cellWidget(row, 3)
+            print(column3.text())
+            if column3.text() == "":
+                column3.setText('n')
+            coef2 = 0
+            if str(column3.text()) == 'y':
+                coef2 = str(inProgress)
+            elif str(column3.text()) == 'n':
+                coef2 = str(endProgress)
+            print(coef2)
+            need = int((amount[row] * int(coef) - int(odd))*float(coef2))
+            print(need)
+            column6 = self.lineTable.cellWidget(row, 6)
+            column6.setText(str(need))
 
     def clear_table(self):
         self.lineTable.setRowCount(0)
@@ -424,27 +726,31 @@ class Second(QtWidgets.QMainWindow):
                 self.lineTable.insertRow(rowPosition)
                 reg_ex = QtCore.QRegExp('^[0-9]{1,10}$')
                 validator = QtGui.QRegExpValidator(reg_ex)
-                lineEdit = QtWidgets.QLineEdit(str(data[row][8]))
+                lineEdit = QtWidgets.QLineEdit(str(data[row][10]))
                 lineEdit.setValidator(validator)
-                lineEdit2 = QtWidgets.QLineEdit(str(data[row][3]))
+                lineEdit2 = QtWidgets.QLineEdit(str(data[row][5]))
                 lineEdit2.setValidator(validator)
-                lineEdit3 = QtWidgets.QLineEdit(str(data[row][4]))
+                lineEdit3 = QtWidgets.QLineEdit(str(data[row][6]))
                 lineEdit3.setValidator(validator)
                 reg_ex1 = QtCore.QRegExp('^[0-9]{1,1}$')
                 validator = QtGui.QRegExpValidator(reg_ex1)
-                lineEdit1 = QtWidgets.QLineEdit(str(data[row][9]))
+                lineEdit1 = QtWidgets.QLineEdit(str(data[row][11]))
                 lineEdit1.setValidator(validator)
+                lineEdit0 = QtWidgets.QLineEdit(str(data[row][4]))
+                lineEdit0.setValidator(validator)
 
                 self.lineTable.setCellWidget(rowPosition, 0, QtWidgets.QLineEdit(str(data[row][0])))
                 self.lineTable.setCellWidget(rowPosition, 1, QtWidgets.QLineEdit(str(data[row][1])))
                 self.lineTable.setCellWidget(rowPosition, 2, QtWidgets.QLineEdit(str(data[row][2])))
-                self.lineTable.setCellWidget(rowPosition, 3, lineEdit2)
-                self.lineTable.setCellWidget(rowPosition, 4, lineEdit3)
-                self.lineTable.setCellWidget(rowPosition, 5, QtWidgets.QLineEdit(str(data[row][5])))
-                self.lineTable.setCellWidget(rowPosition, 6, QtWidgets.QLineEdit(str(data[row][6])))
+                self.lineTable.setCellWidget(rowPosition, 3, QtWidgets.QLineEdit(str(data[row][3])))
+                self.lineTable.setCellWidget(rowPosition, 4, lineEdit0)
+                self.lineTable.setCellWidget(rowPosition, 5, lineEdit2)
+                self.lineTable.setCellWidget(rowPosition, 6, lineEdit3)
                 self.lineTable.setCellWidget(rowPosition, 7, QtWidgets.QLineEdit(str(data[row][7])))
-                self.lineTable.setCellWidget(rowPosition, 8, lineEdit)
-                self.lineTable.setCellWidget(rowPosition, 9, lineEdit1)
+                self.lineTable.setCellWidget(rowPosition, 8, QtWidgets.QLineEdit(str(data[row][8])))
+                self.lineTable.setCellWidget(rowPosition, 9, QtWidgets.QLineEdit(str(data[row][9])))
+                self.lineTable.setCellWidget(rowPosition, 10, lineEdit)
+                self.lineTable.setCellWidget(rowPosition, 11, lineEdit1)
 
     def on_back(self):
         Second.saveInstance(self)
@@ -542,8 +848,10 @@ class First(QtWidgets.QMainWindow):
         data = []
         data = settings.value('bang', data)
         part = []
+
         for each in data:
             part.append(each[4])
+
         for n, i in enumerate(part):
             if not i.isdigit():
                 part[n] = 0
@@ -588,43 +896,46 @@ class First(QtWidgets.QMainWindow):
     def restoreSettings(self):
         settings = QtCore.QSettings('myorg', 'myapp')
         name = settings.value('ten', '')
-        productNum = settings.value('loai', '')
-        orderDate = settings.value('dateOrder', '')
-        deliDate = settings.value('deliveryDate', '')
-
-        self.name.setText(name)
-        self.productNum.setText(productNum)
-        self.dateOfOrder.setDate(QtCore.QDate(orderDate))
-        self.deliveryDate.setDate(QtCore.QDate(deliDate))
-        data = []
-        data = settings.value('bang', data)
-        numrows = len(data)
-        if numrows == 0:
+        if name == '':
             pass
         else:
-            for row in range(numrows):
-                rowPosition = self.tableWidget.rowCount()
-                self.tableWidget.insertRow(rowPosition)
-                lineEdit = QtWidgets.QLineEdit(str(data[row][3]))
-                reg_ex = QtCore.QRegExp('^[0-9]{1,1000}$')
-                validator = QtGui.QRegExpValidator(reg_ex)
-                lineEdit.setValidator(validator)
-                lineEdit1 = QtWidgets.QLineEdit(str(data[row][4]))
-                reg_ex = QtCore.QRegExp('^[0-9]{1,2}$')
-                validator = QtGui.QRegExpValidator(reg_ex)
-                lineEdit1.setValidator(validator)
-                lineEdit2 = QtWidgets.QLineEdit(str(data[row][5]))
-                reg_ex = QtCore.QRegExp('^[0-9]{1,2}$')
-                validator = QtGui.QRegExpValidator(reg_ex)
-                lineEdit2.setValidator(validator)
-                self.tableWidget.setCellWidget(rowPosition, 0, QtWidgets.QLineEdit(str(data[row][0])))
-                self.tableWidget.setCellWidget(rowPosition, 1, QtWidgets.QLineEdit(str(data[row][1])))
-                self.tableWidget.setCellWidget(rowPosition, 2, QtWidgets.QLineEdit(str(data[row][2])))
-                self.tableWidget.setCellWidget(rowPosition, 3, lineEdit)
-                self.tableWidget.setCellWidget(rowPosition, 4, lineEdit1)
-                self.tableWidget.setCellWidget(rowPosition, 5, lineEdit2)
-                self.tableWidget.setCellWidget(rowPosition, 6, QtWidgets.QLineEdit(str(data[row][6])))
-                self.tableWidget.setCellWidget(rowPosition, 7, QtWidgets.QLineEdit(str(data[row][7])))
+            productNum = settings.value('loai', '')
+            orderDate = settings.value('dateOrder', '')
+            deliDate = settings.value('deliveryDate', '')
+
+            self.name.setText(name)
+            self.productNum.setText(productNum)
+            self.dateOfOrder.setDate(QtCore.QDate(orderDate))
+            self.deliveryDate.setDate(QtCore.QDate(deliDate))
+            data = []
+            data = settings.value('bang', data)
+            numrows = len(data)
+            if numrows == 0:
+                pass
+            else:
+                for row in range(numrows):
+                    rowPosition = self.tableWidget.rowCount()
+                    self.tableWidget.insertRow(rowPosition)
+                    lineEdit = QtWidgets.QLineEdit(str(data[row][3]))
+                    reg_ex = QtCore.QRegExp('^[0-9]{1,1000}$')
+                    validator = QtGui.QRegExpValidator(reg_ex)
+                    lineEdit.setValidator(validator)
+                    lineEdit1 = QtWidgets.QLineEdit(str(data[row][4]))
+                    reg_ex = QtCore.QRegExp('^[0-9]{1,2}$')
+                    validator = QtGui.QRegExpValidator(reg_ex)
+                    lineEdit1.setValidator(validator)
+                    lineEdit2 = QtWidgets.QLineEdit(str(data[row][5]))
+                    reg_ex = QtCore.QRegExp('^[0-9]{1,2}$')
+                    validator = QtGui.QRegExpValidator(reg_ex)
+                    lineEdit2.setValidator(validator)
+                    self.tableWidget.setCellWidget(rowPosition, 0, QtWidgets.QLineEdit(str(data[row][0])))
+                    self.tableWidget.setCellWidget(rowPosition, 1, QtWidgets.QLineEdit(str(data[row][1])))
+                    self.tableWidget.setCellWidget(rowPosition, 2, QtWidgets.QLineEdit(str(data[row][2])))
+                    self.tableWidget.setCellWidget(rowPosition, 3, lineEdit)
+                    self.tableWidget.setCellWidget(rowPosition, 4, lineEdit1)
+                    self.tableWidget.setCellWidget(rowPosition, 5, lineEdit2)
+                    self.tableWidget.setCellWidget(rowPosition, 6, QtWidgets.QLineEdit(str(data[row][6])))
+                    self.tableWidget.setCellWidget(rowPosition, 7, QtWidgets.QLineEdit(str(data[row][7])))
 
 
 class SettingPlan(QtWidgets.QDialog):
@@ -681,8 +992,11 @@ class SettingProduce(QtWidgets.QDialog):
 def main():
     app = QtWidgets.QApplication(sys.argv)
     settings = QtCore.QSettings('myorg', 'myapp')
-    settings.clear()
+    # settings.clear()
+    settings.remove('bang2')
+    settings.remove('bang3')
     main = First()
+    main.restoreSettings()
     main.show()
 
     sys.exit(app.exec_())
